@@ -1,0 +1,31 @@
+# Local reference material — must never be committed
+reference/
+
+# Gradle
+.gradle/
+build/
+
+# Fabric / Minecraft dev runtime
+run/
+runs/
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+hs_err_pid*.log
