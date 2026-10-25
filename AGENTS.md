@@ -9,8 +9,14 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
   build with `protocol/` (shared wire-protocol constants/types), `fabric/`
   (the mod, split main/client source sets, Mojang mappings), and `paper/`
   (companion Paper relay plugin, stub only). `./gradlew build` verified green.
-- Next milestone: activity data model + network payloads in `protocol/`,
-  then the Fabric server relay and client features.
+- Protocol v1 landed (2026-10-25): `ActivityState`/`MenuType` + sealed `packet/`
+  hierarchy (`Hello`/`ActivityUpdate` serverbound, `Welcome`/`PlayerActivity`
+  clientbound), self-contained byte[] `ScreenPeekCodec` with a version-stamped
+  envelope, and 11 JUnit round-trip tests. Fabric transport wraps opaque bytes
+  in payloads on `screenpeek:serverbound`/`screenpeek:clientbound` (size-capped
+  at 256 B, registered via `PayloadTypeRegistry` in common init).
+- Next milestone: server relay (Hello→Welcome handshake, per-player state
+  tracking, broadcast to tracked players), then client features.
 - Scope and roadmap authority: `README.md` (v0.1 = Fabric client + built-in
   server relay with core features; v0.2 = Paper relay plugin). Paper support
   decision (2026-10-25): companion plugin, monorepo, shared `protocol`
