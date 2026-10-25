@@ -13,6 +13,7 @@ public class ScreenPeekClient implements ClientModInitializer {
 		ClientNetworking.register();
 		ChatFocusTracker.register();
 		OpenMenuTracker.register();
+		IdleTracker.register();
 		TypingBubbleRenderer.register();
 		MenuPanelRenderer.register();
 		TypingChatHint.register();

@@ -51,4 +51,14 @@ class PeerActivityCacheTest {
 
 		assertEquals(List.of(), cache.menuOpenPlayers());
 	}
+
+	@Test
+	void isIdleIsTrueOnlyForIdlePlayers() {
+		cache.update(ALICE, new ActivityState(false, MenuType.NONE, true));
+		cache.update(BOB, ActivityState.INACTIVE);
+
+		assertEquals(true, cache.isIdle(ALICE));
+		assertEquals(false, cache.isIdle(BOB));
+		assertEquals(false, cache.isIdle(UUID.nameUUIDFromBytes("unknown".getBytes())));
+	}
 }

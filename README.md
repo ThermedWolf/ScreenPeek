@@ -27,8 +27,8 @@ for everyone else:
   the chat screen, with configurable text.
 - **Menu peeking** — a small floating panel in front of each player showing
   which menu they have open, with a distinct icon per menu type.
-- **Idle detection** — a configurable no-input timeout marks players idle,
-  surfaced in the tab player list.
+- **Idle detection** — losing the game window (another window/tab, or a
+  minimized window) marks players idle, surfaced in the tab player list.
 - **Privacy first** — every broadcast category is a client-side opt-out. You
   decide exactly what leaves your client.
 

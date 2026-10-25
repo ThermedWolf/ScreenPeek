@@ -39,8 +39,18 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
   vanilla-style tags), refactored `TypingBubbleRenderer` onto it, and
   `client/render/MenuPanelRenderer` + `MenuLabels` (per-type coloured label;
   sprite icons are later polish). 33 JUnit tests total.
-- Next milestone: idle detection (no-input timeout → setIdle, idle marker in
-  the tab player list).
+- Idle detection landed (2026-10-25) with window-based semantics (user
+  decision, README synced): idle = the Minecraft window is not active
+  (minimized or another window/tab has focus — GLFW collapses both into one
+  signal, `Minecraft.isWindowActive()`). `client/IdleTracker` reports it;
+  `client/ChatFocusTracker` additionally gates typing on window focus (an
+  alt-tabbed player cannot type). Tab-list marker is the project's first
+  mixin: `mixin/client/PlayerTabOverlayMixin` styles idle players'
+  `getNameForDisplay` result grey+italic (registered in
+  `screenpeek.client.mixins.json`). authlib 10 note: GameProfile is a record
+  (`id()`, not `getId()`). 34 JUnit tests total.
+- Next milestone: privacy config (client-side opt-outs per broadcast
+  category) plus the in-game visual verification pass for all features.
 - Scope and roadmap authority: `README.md` (v0.1 = Fabric client + built-in
   server relay with core features; v0.2 = Paper relay plugin). Paper support
   decision (2026-10-25): companion plugin, monorepo, shared `protocol`

@@ -28,6 +28,12 @@ public final class PeerActivityCache {
 		return Optional.ofNullable(states.get(playerId));
 	}
 
+	/** True only when the relay has reported this player as idle. */
+	public boolean isIdle(UUID playerId) {
+		ActivityState state = states.get(playerId);
+		return state != null && state.idle();
+	}
+
 	/** Ids of players currently typing; no guaranteed order. */
 	public List<UUID> typingPlayers() {
 		return matching(ActivityState::typing);
