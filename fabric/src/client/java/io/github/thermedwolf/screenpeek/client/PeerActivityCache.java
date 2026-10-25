@@ -1,12 +1,14 @@
 package io.github.thermedwolf.screenpeek.client;
 
 import io.github.thermedwolf.screenpeek.protocol.ActivityState;
+import io.github.thermedwolf.screenpeek.protocol.MenuType;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Everything this client knows about other players' activity, filled by the
@@ -28,8 +30,17 @@ public final class PeerActivityCache {
 
 	/** Ids of players currently typing; no guaranteed order. */
 	public List<UUID> typingPlayers() {
+		return matching(ActivityState::typing);
+	}
+
+	/** Ids of players with any menu open; no guaranteed order. */
+	public List<UUID> menuOpenPlayers() {
+		return matching(state -> state.openMenu() != MenuType.NONE);
+	}
+
+	private List<UUID> matching(Predicate<ActivityState> filter) {
 		return states.entrySet().stream()
-				.filter(entry -> entry.getValue().typing())
+				.filter(entry -> filter.test(entry.getValue()))
 				.map(Map.Entry::getKey)
 				.toList();
 	}

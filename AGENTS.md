@@ -32,8 +32,15 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
   `client/render/TypingChatHint` ("X is typing..." hint attached before the
   vanilla chat HUD layer). 27 JUnit tests total; client-only unit tests run
   via a test source set that also sees client output.
-- Next milestone: menu peeking (open-menu detection → `setOpenMenu`, floating
-  panel rendering with an icon per menu type).
+- Menu peeking landed (2026-10-25): `client/OpenMenuTracker` (tick-based
+  screen→MenuType mapping: INVENTORY, CHEST (ContainerScreen family),
+  CRAFTING, FURNACE, other `AbstractContainerScreen` → GENERIC),
+  `client/render/PeerNameplates` (shared snapshot+submit mechanism for
+  vanilla-style tags), refactored `TypingBubbleRenderer` onto it, and
+  `client/render/MenuPanelRenderer` + `MenuLabels` (per-type coloured label;
+  sprite icons are later polish). 33 JUnit tests total.
+- Next milestone: idle detection (no-input timeout → setIdle, idle marker in
+  the tab player list).
 - Scope and roadmap authority: `README.md` (v0.1 = Fabric client + built-in
   server relay with core features; v0.2 = Paper relay plugin). Paper support
   decision (2026-10-25): companion plugin, monorepo, shared `protocol`
