@@ -1,5 +1,8 @@
 package io.github.thermedwolf.screenpeek.client;
 
+import io.github.thermedwolf.screenpeek.client.render.TypingBubbleRenderer;
+import io.github.thermedwolf.screenpeek.client.render.TypingChatHint;
+
 import net.fabricmc.api.ClientModInitializer;
 
 public class ScreenPeekClient implements ClientModInitializer {
@@ -7,5 +10,8 @@ public class ScreenPeekClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ClientNetworking.register();
+		ChatFocusTracker.register();
+		TypingBubbleRenderer.register();
+		TypingChatHint.register();
 	}
 }

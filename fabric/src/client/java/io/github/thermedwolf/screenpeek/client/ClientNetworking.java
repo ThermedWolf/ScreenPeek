@@ -31,10 +31,14 @@ public final class ClientNetworking {
 	public static void register() {
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 			ClientRelaySession.reset();
+			ClientActivity.reset();
 			ClientPlayNetworking.send(new ServerboundScreenPeekPayload(ScreenPeekCodec.encode(new HelloPacket())));
 		});
 
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ClientRelaySession.reset());
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			ClientRelaySession.reset();
+			ClientActivity.reset();
+		});
 
 		ClientPlayNetworking.registerGlobalReceiver(ClientboundScreenPeekPayload.TYPE, (payload, context) -> {
 			try {
@@ -44,9 +48,7 @@ public final class ClientNetworking {
 						ClientRelaySession.markPresent();
 						LOGGER.debug("ScreenPeek relay present on this server");
 					}
-					// Per-player state rendering attaches to this in a later step.
-					case PlayerActivityPacket _ -> {
-					}
+					case PlayerActivityPacket p -> ClientActivity.PEERS.update(p.playerId(), p.state());
 				}
 			} catch (ScreenPeekProtocolException e) {
 				LOGGER.debug("Dropped undecodable ScreenPeek packet: {}", e.getMessage());

@@ -23,8 +23,17 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
   client announces via `client/ClientNetworking` and tracks relay presence in
   `client/ClientRelaySession`. 18 JUnit tests total. The Paper plugin (v0.2)
   will reuse `ScreenPeekRelay` with a Bukkit transport.
-- Next milestone: typing indicator (client detection → ActivityUpdate,
-  welcome-snapshot handling, in-world bubble + chat hint rendering).
+- Typing indicator landed (2026-10-25): `client/ChatFocusTracker` (tick-based
+  chat-focus edges; focused counts as typing), `client/LocalActivityReporter`
+  (composed state, change-only sends, relay-gated; pure logic, 5 unit tests),
+  `client/PeerActivityCache` (peer states from snapshot + updates),
+  `client/render/TypingBubbleRenderer` (in-world bubble reusing vanilla
+  `submitNameTag` via END_EXTRACTION snapshot + COLLECT_SUBMITS) and
+  `client/render/TypingChatHint` ("X is typing..." hint attached before the
+  vanilla chat HUD layer). 27 JUnit tests total; client-only unit tests run
+  via a test source set that also sees client output.
+- Next milestone: menu peeking (open-menu detection → `setOpenMenu`, floating
+  panel rendering with an icon per menu type).
 - Scope and roadmap authority: `README.md` (v0.1 = Fabric client + built-in
   server relay with core features; v0.2 = Paper relay plugin). Paper support
   decision (2026-10-25): companion plugin, monorepo, shared `protocol`
