@@ -17,5 +17,6 @@ public class ScreenPeekClient implements ClientModInitializer {
 		TypingBubbleRenderer.register();
 		MenuPanelRenderer.register();
 		TypingChatHint.register();
+		ScreenPeekCommand.register();
 	}
 }

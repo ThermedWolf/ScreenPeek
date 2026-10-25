@@ -7,19 +7,24 @@ import io.github.thermedwolf.screenpeek.protocol.packet.ActivityUpdatePacket;
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * Owns this client's local activity state and reports it to the relay whenever
  * the composed state changes. Detection sources (chat focus, menus, idle) each
  * flip one flag; the reporter does all edge detection, so sources can be naive
- * and the network still only sees real transitions.
+ * and the network only sees real transitions.
  *
- * <p>Pure logic: the relay-presence gate and the transport are injected,
- * keeping this unit-testable without Minecraft.
+ * <p>Before an update leaves the client it passes through the injected
+ * {@code privacyFilter}, which zeroes every opted-out category — privacy is
+ * enforced at composition, not at display. Pure logic: the relay-presence
+ * gate, the filter and the transport are all injected, keeping this
+ * unit-testable without Minecraft.
  */
 public final class LocalActivityReporter {
 
 	private final BooleanSupplier relayPresent;
+	private final UnaryOperator<ActivityState> privacyFilter;
 	private final Consumer<ActivityUpdatePacket> sender;
 
 	private boolean typing;
@@ -27,8 +32,12 @@ public final class LocalActivityReporter {
 	private boolean idle;
 	private ActivityState lastReported = ActivityState.INACTIVE;
 
-	public LocalActivityReporter(BooleanSupplier relayPresent, Consumer<ActivityUpdatePacket> sender) {
+	public LocalActivityReporter(
+			BooleanSupplier relayPresent,
+			UnaryOperator<ActivityState> privacyFilter,
+			Consumer<ActivityUpdatePacket> sender) {
 		this.relayPresent = Objects.requireNonNull(relayPresent, "relayPresent");
+		this.privacyFilter = Objects.requireNonNull(privacyFilter, "privacyFilter");
 		this.sender = Objects.requireNonNull(sender, "sender");
 	}
 
@@ -48,6 +57,14 @@ public final class LocalActivityReporter {
 	}
 
 	/**
+	 * Re-reports the current state even without a detection edge — used when
+	 * the privacy filter changes, so an opt-out takes effect immediately.
+	 */
+	public void refresh() {
+		reportIfChanged();
+	}
+
+	/**
 	 * Forgets the last reported state (new session). The next change re-sends
 	 * even if the composed state is identical to what a previous session saw.
 	 */
@@ -56,8 +73,8 @@ public final class LocalActivityReporter {
 	}
 
 	private void reportIfChanged() {
-		ActivityState state = new ActivityState(typing, openMenu, idle);
-		if (state.equals(lastReported)) {
+		ActivityState outgoing = privacyFilter.apply(new ActivityState(typing, openMenu, idle));
+		if (outgoing.equals(lastReported)) {
 			return;
 		}
 		// Never update lastReported while the relay is absent: when a relay
@@ -65,7 +82,7 @@ public final class LocalActivityReporter {
 		if (!relayPresent.getAsBoolean()) {
 			return;
 		}
-		sender.accept(new ActivityUpdatePacket(state));
-		lastReported = state;
+		sender.accept(new ActivityUpdatePacket(outgoing));
+		lastReported = outgoing;
 	}
 }

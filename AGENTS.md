@@ -30,8 +30,8 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
   `client/render/TypingBubbleRenderer` (in-world bubble reusing vanilla
   `submitNameTag` via END_EXTRACTION snapshot + COLLECT_SUBMITS) and
   `client/render/TypingChatHint` ("X is typing..." hint attached before the
-  vanilla chat HUD layer). 27 JUnit tests total; client-only unit tests run
-  via a test source set that also sees client output.
+  vanilla chat HUD layer). Client-only unit tests run via a test source set
+  that also sees client output.
 - Menu peeking landed (2026-10-25): `client/OpenMenuTracker` (tick-based
   screen→MenuType mapping: INVENTORY, CHEST (ContainerScreen family),
   CRAFTING, FURNACE, other `AbstractContainerScreen` → GENERIC),
@@ -49,8 +49,19 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
   `getNameForDisplay` result grey+italic (registered in
   `screenpeek.client.mixins.json`). authlib 10 note: GameProfile is a record
   (`id()`, not `getId()`). 34 JUnit tests total.
-- Next milestone: privacy config (client-side opt-outs per broadcast
-  category) plus the in-game visual verification pass for all features.
+- Privacy config landed (2026-10-25) — v0.1 features are code-complete:
+  `client/ScreenPeekConfig` (`config/screenpeek.json`, Gson, log-and-defaults
+  on parse errors), enforced at composition via a `UnaryOperator<ActivityState>`
+  privacy filter in `LocalActivityReporter` (opted-out fields are zeroed before
+  sending, never just hidden), `/screenpeek` client command (status +
+  `typing|menu|idle on|off`, applies live via `reporter.refresh()`), 35 JUnit
+  tests total. Second dev client configured: `:fabric:runClient2`
+  (`run2/` dir, username Player2) for two-player verification against
+  `:fabric:runServer` — checklist in README "Verify"; visual placement
+  constants still need human eyes before any release.
+- Next milestone: in-game verification pass, then v0.1 release prep — the
+  owner must pick a license before the first public release (see Hard
+  constraints).
 - Scope and roadmap authority: `README.md` (v0.1 = Fabric client + built-in
   server relay with core features; v0.2 = Paper relay plugin). Paper support
   decision (2026-10-25): companion plugin, monorepo, shared `protocol`

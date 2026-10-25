@@ -17,14 +17,20 @@ public final class ClientActivity {
 	/** Other players' latest activity states, as relayed by the server. */
 	public static final PeerActivityCache PEERS = new PeerActivityCache();
 
-	private static final LocalActivityReporter REPORTER =
-			new LocalActivityReporter(ClientRelaySession::isRelayPresent, ClientActivity::send);
+	private static final ScreenPeekConfig CONFIG = ScreenPeekConfig.load();
+
+	private static final LocalActivityReporter REPORTER = new LocalActivityReporter(
+			ClientRelaySession::isRelayPresent, CONFIG::filter, ClientActivity::send);
 
 	private ClientActivity() {
 	}
 
 	public static LocalActivityReporter reporter() {
 		return REPORTER;
+	}
+
+	public static ScreenPeekConfig config() {
+		return CONFIG;
 	}
 
 	/** Called on join and disconnect; both stores restart with every session. */

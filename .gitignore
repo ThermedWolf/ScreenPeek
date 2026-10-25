@@ -8,6 +8,7 @@ build/
 # Fabric / Minecraft dev runtime
 run/
 runs/
+run2/
 logs/
 *.log
 

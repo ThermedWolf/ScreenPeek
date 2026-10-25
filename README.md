@@ -30,7 +30,9 @@ for everyone else:
 - **Idle detection** — losing the game window (another window/tab, or a
   minimized window) marks players idle, surfaced in the tab player list.
 - **Privacy first** — every broadcast category is a client-side opt-out. You
-  decide exactly what leaves your client.
+  decide exactly what leaves your client: `/screenpeek <typing|menu|idle>
+  <on|off>` applies instantly and persists to `config/screenpeek.json`;
+  opted-out data is zeroed before it is sent, never just hidden.
 
 ### Server support
 
@@ -109,6 +111,27 @@ Expected artifacts:
 ```
 
 No tests exist yet; `check` currently covers compilation and packaging.
+
+#### In-game verification (two players)
+
+Dev runs use offline accounts, so a local dedicated server plus two clients
+covers every feature:
+
+```bash
+./gradlew :fabric:runServer    # wait for "Done ..." (localhost, offline mode)
+./gradlew :fabric:runClient    # client 1: join localhost
+./gradlew :fabric:runClient2   # client 2: join localhost (username Player2)
+```
+
+Checklist:
+
+| Action | Expected on the other client |
+| --- | --- |
+| Client 1 opens chat | "typing..." bubble above their head + "Player2 is typing..." hint |
+| Client 2 presses E / opens a chest | panel labelled "inventory" / "chest" above their head |
+| Client 2 alt-tabs or minimizes | their tab-list name turns grey and italic; typing bubble (if any) clears |
+| `/screenpeek menu off` on client 2 | panel disappears for everyone; `/screenpeek` shows `menu=off` |
+| Client 2 closes the world | their tag disappears everywhere |
 
 ## License
 
