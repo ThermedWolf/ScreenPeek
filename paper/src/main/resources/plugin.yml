@@ -1,0 +1,7 @@
+name: ScreenPeek
+version: '${version}'
+main: io.github.thermedwolf.screenpeek.paper.ScreenPeekPaperPlugin
+description: ScreenPeek relay for Paper servers — shares player activity with ScreenPeek clients.
+authors: [ThermedWolf]
+website: https://github.com/ThermedWolf/ScreenPeek
+api-version: '26.3'

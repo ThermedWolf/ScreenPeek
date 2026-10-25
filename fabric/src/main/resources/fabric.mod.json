@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "screenpeek",
+	"version": "${version}",
+	"name": "ScreenPeek",
+	"description": "See what everyone on your server is up to — typing indicators, open menus, idle markers, right in the world.",
+	"authors": [
+		"ThermedWolf"
+	],
+	"contact": {
+		"sources": "https://github.com/ThermedWolf/ScreenPeek"
+	},
+	"license": "All-Rights-Reserved",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"io.github.thermedwolf.screenpeek.ScreenPeek"
+		],
+		"client": [
+			"io.github.thermedwolf.screenpeek.client.ScreenPeekClient"
+		]
+	},
+	"mixins": [
+		"screenpeek.mixins.json",
+		{
+			"config": "screenpeek.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

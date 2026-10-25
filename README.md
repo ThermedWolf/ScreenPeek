@@ -32,6 +32,16 @@ for everyone else:
 - **Privacy first** — every broadcast category is a client-side opt-out. You
   decide exactly what leaves your client.
 
+### Server support
+
+The features need a server-side relay that passes activity between players.
+ScreenPeek ships that relay twice, on one shared wire protocol:
+
+- **Fabric servers** — built into the mod itself (v0.1).
+- **Paper servers** — a companion Paper plugin for servers that cannot run
+  Fabric mods (v0.2). Players still need the Fabric client mod; vanilla
+  players simply share nothing and see nothing.
+
 ### Later ideas
 
 - Richer body animations (head looking down at the screen, click gestures)
@@ -45,6 +55,7 @@ for everyone else:
 | --- | --- |
 | Minecraft | 26.3 (latest stable) |
 | Loader | Fabric |
+| Paper (companion server plugin, v0.2) | 26.3 |
 | Java (build & runtime) | 25+ |
 
 ## Inspiration & originality
@@ -59,26 +70,45 @@ independent implementation on modern Fabric. To be explicit:
 
 ## Development
 
-The code scaffold is landing next. Once it does, the workflow will be:
+The repository is a Gradle multi-project build with one shared protocol
+module:
+
+```
+protocol/   wire-protocol constants and payload types shared by every
+            implementation, so the Fabric mod and Paper plugin can never
+            disagree on the wire format
+fabric/     the Fabric mod (client + built-in server relay), split into
+            main and client source sets
+paper/      the companion Paper plugin (relay, v0.2)
+```
 
 ### Prerequisites
 
-- JDK 25 or newer — check with `java -version`
+- JDK 25 or newer — check with `java -version`. The Gradle daemon itself must
+  also run on Java 25+; a stale `org.gradle.java.home` in a global
+  `~/.gradle/gradle.properties` fails the build with
+  "Dependency requires at least JVM runtime version 25".
 - Git
 
 ### Build
 
 ```bash
-./gradlew build   # compiles and packages the mod
+./gradlew build   # compiles and packages all modules
 ```
 
-Expected result: `build/libs/screenpeek-<version>.jar`
+Expected artifacts:
+
+- `fabric/build/libs/screenpeek-<version>.jar` — the Fabric mod (plus a `-sources` jar)
+- `paper/build/libs/screenpeek-paper-<version>.jar` — the Paper plugin
+- `protocol/build/libs/protocol-<version>.jar` — shared protocol library (bundled into the other two)
 
 ### Verify
 
 ```bash
 ./gradlew check   # tests and validation, run in CI on every push
 ```
+
+No tests exist yet; `check` currently covers compilation and packaging.
 
 ## License
 
