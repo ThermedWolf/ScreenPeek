@@ -1,6 +1,7 @@
 package io.github.thermedwolf.screenpeek;
 
 import io.github.thermedwolf.screenpeek.network.ScreenPeekNetworking;
+import io.github.thermedwolf.screenpeek.relay.RelayNetworking;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 
@@ -16,6 +17,7 @@ public class ScreenPeek implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ScreenPeekNetworking.register();
+		RelayNetworking.register();
 		LOGGER.info("ScreenPeek initialized");
 	}
 

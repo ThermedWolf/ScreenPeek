@@ -12,11 +12,19 @@ Repo-specific instructions for AI coding sessions working in ScreenPeek.
 - Protocol v1 landed (2026-10-25): `ActivityState`/`MenuType` + sealed `packet/`
   hierarchy (`Hello`/`ActivityUpdate` serverbound, `Welcome`/`PlayerActivity`
   clientbound), self-contained byte[] `ScreenPeekCodec` with a version-stamped
-  envelope, and 11 JUnit round-trip tests. Fabric transport wraps opaque bytes
-  in payloads on `screenpeek:serverbound`/`screenpeek:clientbound` (size-capped
-  at 256 B, registered via `PayloadTypeRegistry` in common init).
-- Next milestone: server relay (Hello→Welcome handshake, per-player state
-  tracking, broadcast to tracked players), then client features.
+  envelope. Fabric transport wraps opaque bytes in payloads on
+  `screenpeek:serverbound`/`screenpeek:clientbound` (size-capped at 256 B,
+  registered via `PayloadTypeRegistry` in common init).
+- Server relay landed (2026-10-25): transport-agnostic `protocol/relay/`
+  (`ScreenPeekRelay` + `RelayTransport`) — Hello→Welcome plus a tracked-state
+  snapshot, full-state updates broadcast to everyone except the sender,
+  disconnect broadcasts INACTIVE, reset on server stop. Fabric wiring lives in
+  `relay/RelayNetworking` (volatile server holder + Fabric transport); the
+  client announces via `client/ClientNetworking` and tracks relay presence in
+  `client/ClientRelaySession`. 18 JUnit tests total. The Paper plugin (v0.2)
+  will reuse `ScreenPeekRelay` with a Bukkit transport.
+- Next milestone: typing indicator (client detection → ActivityUpdate,
+  welcome-snapshot handling, in-world bubble + chat hint rendering).
 - Scope and roadmap authority: `README.md` (v0.1 = Fabric client + built-in
   server relay with core features; v0.2 = Paper relay plugin). Paper support
   decision (2026-10-25): companion plugin, monorepo, shared `protocol`
