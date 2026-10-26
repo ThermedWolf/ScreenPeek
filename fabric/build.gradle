@@ -66,12 +66,15 @@ processResources {
 // Dev clients use offline sessions, so the dev server must run in offline
 // mode or they cannot join. Loom has no knob for this, so seed the property
 // before first server boot; an existing server.properties is never touched.
+// The target File is resolved at configuration time — capturing a plain File
+// (never a script object) is what makes this configuration-cache safe.
+def devServerProperties = layout.projectDirectory.file('run/server.properties').asFile
+
 tasks.matching { it.name == 'runServer' }.configureEach {
 	doFirst {
-		def serverProperties = file('run/server.properties')
-		if (!serverProperties.exists()) {
-			serverProperties.parentFile.mkdirs()
-			serverProperties.text = 'online-mode=false\n'
+		if (!devServerProperties.exists()) {
+			devServerProperties.parentFile.mkdirs()
+			devServerProperties.text = 'online-mode=false\n'
 		}
 	}
 }
