@@ -120,7 +120,8 @@ No tests exist yet; `check` currently covers compilation and packaging.
 #### In-game verification (two players)
 
 Dev runs use offline accounts, so a local dedicated server plus two clients
-covers every feature:
+covers every feature. The dev server is automatically seeded with
+`online-mode=false` on first boot (don't expose it to the internet):
 
 ```bash
 ./gradlew :fabric:runServer    # wait for "Done ..." (localhost, offline mode)
