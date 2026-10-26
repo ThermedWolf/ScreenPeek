@@ -104,6 +104,11 @@ Expected artifacts:
 - `paper/build/libs/screenpeek-paper-<version>.jar` — the Paper plugin
 - `protocol/build/libs/protocol-<version>.jar` — shared protocol library (bundled into the other two)
 
+The Fabric mod jar is **universal**: install the same file in a client's and a
+Fabric server's `mods` folder — the loader activates the client features or
+the server relay as appropriate. There are no published releases yet; build
+locally.
+
 ### Verify
 
 ```bash
