@@ -13,6 +13,9 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,6 +33,9 @@ public final class TypingChatHint {
 	/** Extra lift while the input box occupies the chat's home position. */
 	private static final int CHAT_OPEN_EXTRA_LIFT = 14;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScreenPeek.MOD_ID);
+	private static String lastRenderedHint;
+
 	private TypingChatHint() {
 	}
 
@@ -44,9 +50,14 @@ public final class TypingChatHint {
 		}
 		List<String> names = typingNames(client.level);
 		if (names.isEmpty()) {
+			lastRenderedHint = null;
 			return;
 		}
 		String hint = buildHint(names);
+		if (!hint.equals(lastRenderedHint)) {
+			lastRenderedHint = hint;
+			LOGGER.debug("Chat hint: {}", hint);
+		}
 		int y = graphics.guiHeight() - BOTTOM_MARGIN;
 		if (client.gui.screen() instanceof ChatScreen) {
 			y -= CHAT_OPEN_EXTRA_LIFT;

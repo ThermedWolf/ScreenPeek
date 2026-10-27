@@ -48,7 +48,11 @@ public final class ClientNetworking {
 						ClientRelaySession.markPresent();
 						LOGGER.debug("ScreenPeek relay present on this server");
 					}
-					case PlayerActivityPacket p -> ClientActivity.PEERS.update(p.playerId(), p.state());
+					case PlayerActivityPacket p -> {
+					ClientActivity.PEERS.update(p.playerId(), p.state());
+					LOGGER.debug("Peer {} -> typing={} menu={} idle={}",
+							p.playerId(), p.state().typing(), p.state().openMenu(), p.state().idle());
+				}
 				}
 			} catch (ScreenPeekProtocolException e) {
 				LOGGER.debug("Dropped undecodable ScreenPeek packet: {}", e.getMessage());

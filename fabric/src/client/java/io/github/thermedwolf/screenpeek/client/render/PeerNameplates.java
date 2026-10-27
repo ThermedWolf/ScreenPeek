@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.github.thermedwolf.screenpeek.ScreenPeek;
+
 /**
  * Shared mechanism for floating nameplate-style tags above other players:
  * snapshot the peers to draw during level extraction (the only phase allowed
@@ -27,8 +32,12 @@ import java.util.function.Function;
  */
 public final class PeerNameplates {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScreenPeek.MOD_ID);
+
 	/** Same translucent dark plate as a vanilla name tag, slightly stronger. */
 	public static final int DEFAULT_BACKGROUND = 0x60000000;
+
+	private static int lastLoggedPlateCount = -1;
 
 	private PeerNameplates() {
 	}
@@ -39,6 +48,15 @@ public final class PeerNameplates {
 	 * are not in this client's level right now are skipped.
 	 */
 	public static List<PeerPlate> extract(LevelExtractionContext context, List<UUID> playerIds) {
+		List<PeerPlate> snapshots = doExtract(context, playerIds);
+		if (snapshots.size() != lastLoggedPlateCount) {
+			lastLoggedPlateCount = snapshots.size();
+			LOGGER.debug("Level extraction produced {} peer plate(s)", snapshots.size());
+		}
+		return snapshots;
+	}
+
+	private static List<PeerPlate> doExtract(LevelExtractionContext context, List<UUID> playerIds) {
 		if (!ClientRelaySession.isRelayPresent() || playerIds.isEmpty()) {
 			return List.of();
 		}

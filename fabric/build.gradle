@@ -20,6 +20,8 @@ loom {
 	}
 
 	// Second offline client for two-player verification (see README "Verify").
+	// (26.3's dev client ignores --server auto-join args, so clients are joined
+	// manually against the :fabric:runServer instance.)
 	runs {
 		client2 {
 			client()
